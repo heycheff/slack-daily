@@ -15,11 +15,12 @@ class ScrumMaster
 
     @robot.hear /./, (res) =>
       if res.message.user.id == @user.id
-        clearTimeout(@timeoutId)
+        @answered = true
 
     @robot.hear /next/i, (res) =>
       if res.message.user.id == @user.id
         @res = res
+        clearTimeout(@timeoutId)
         @callNextUser()
 
   startDaily:  ->
@@ -39,16 +40,19 @@ class ScrumMaster
 
     previousUser = @user
     @user = @users.splice(Math.floor(Math.random() * @users.length), 1)[0]
-    userCallString = @res.random(Strings.userCall).replace('%USER_NAME%', @user.name)
+    @answered = false
 
+    userCallString = @res.random(Strings.userCall).replace('%USER_NAME%', @user.name)
     if previousUser
       @res.send(@res.random(Strings.userFinished).replace('%USER_NAME%', previousUser.name) + userCallString)
     else
       @res.send userCallString
 
   userTimedOut: ->
-    @missedUsers.push @user
-    @res.send(@res.random(Strings.userTimedOut).replace('%USER_NAME%', @user.name))
+    if !@answered
+      @missedUsers.push @user
+      @res.send(@res.random(Strings.userTimedOut).replace('%USER_NAME%', @user.name))
+
     @callNextUser()
 
   finishDaily: ->
