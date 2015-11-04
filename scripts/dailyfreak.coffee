@@ -2,6 +2,7 @@ Strings = require '../assets/strings'
 
 wakeUp = process.env.HUBOT_WAKE_UP or 'daily time'
 next = process.env.HUBOT_NEXT or 'next'
+skip = process.env.HUBOT_SKIP or 'skip (.+)'
 channelName = process.env.HUBOT_DAILY_CHANNEL_NAME or 'daily-review'
 usersBlacklist = process.env.HUBOT_DAILY_USERS_BLACKLIST or 'slackbot,dailyfreak'
 usersBlacklist = usersBlacklist.split(',')
@@ -20,6 +21,15 @@ class ScrumMaster
     @robot.hear new RegExp(next, 'i'), (res) =>
       if res.message.user.id == @user.id
         clearTimeout(@timeoutId)
+        @callNextUser()
+      else
+        @sendMessage Strings.skipUserAlert, userName: @user.name
+
+    @robot.hear new RegExp(skip, 'i'), (res) =>
+      if res.match[1] == @user.name
+        clearTimeout(@timeoutId)
+        @missedUsers.push @user
+        @sendMessage Strings.userSkipped, userName: @user.name
         @callNextUser()
 
   sendMessage: (messages, data) ->

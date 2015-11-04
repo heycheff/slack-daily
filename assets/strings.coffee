@@ -40,6 +40,15 @@ module.exports =
     'Sure you can to tell us what you did later, %userName%'
   ]
 
+  skipUserAlert: [
+    'If you\'re sure %userName% isn\'t responding you should say `skip %userName%`'
+  ]
+
+  userSkipped: [
+    '%userName% was considered away and is in debt with the team!'
+    '%userName%, you have been weighed, you have been measured and you have been found ausent'
+  ]
+
   dailyFinish: [
     'That\'s it folks'
     'Done! See ya'
