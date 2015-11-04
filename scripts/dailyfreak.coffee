@@ -1,5 +1,7 @@
 Strings = require '../assets/strings'
 
+wakeUp = process.env.HUBOT_WAKE_UP or 'daily time'
+next = process.env.HUBOT_NEXT or 'next'
 channelName = process.env.HUBOT_DAILY_CHANNEL_NAME or 'daily-review'
 usersBlacklist = process.env.HUBOT_DAILY_USERS_BLACKLIST or 'slackbot,dailyfreak'
 usersBlacklist = usersBlacklist.split(',')
@@ -7,7 +9,7 @@ usersBlacklist = usersBlacklist.split(',')
 class ScrumMaster
 
   constructor: (@robot) ->
-    @robot.hear /daily time/i, (res) =>
+    @robot.hear new RegExp(wakeUp, 'i'), (res) =>
       @res = res
       @sendMessage Strings.dailyCalledEarly
       @startDaily()
@@ -16,7 +18,7 @@ class ScrumMaster
       if @user && res.message.user.id == @user.id
         @answered = true
 
-    @robot.hear /next/i, (res) =>
+    @robot.hear new RegExp(next, 'i'), (res) =>
       if res.message.user.id == @user.id
         @res = res
         clearTimeout(@timeoutId)
