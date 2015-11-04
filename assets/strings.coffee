@@ -15,29 +15,29 @@ module.exports =
   ]
 
   userCall: [
-    'Go, %USER_NAME%, your call'
-    'It\'s up to you, %USER_NAME%'
-    'Your turn, %USER_NAME%'
-    '%USER_NAME%, tell us what you did'
-    'It\'s your turn, %USER_NAME%'
-    '%USER_NAME%!'
-    '%USER_NAME%, your turn'
+    'Go, %userName%, your call'
+    'It\'s up to you, %userName%'
+    'Your turn, %userName%'
+    '%userName%, tell us what you did'
+    'It\'s your turn, %userName%'
+    '%userName%!'
+    '%userName%, your turn'
   ]
 
   userFinished: [
     ''
     ''
     ''
-    'Thanks, %USER_NAME%. '
+    'Thanks, %userName%. '
     'Great. '
     'Ok. '
-    'Well done, %USER_NAME%. '
+    'Well done, %userName%. '
   ]
 
   userTimedOut: [
-    'Looks like %USER_NAME% is fishing'
-    'As you can see, %USER_NAME% is such hard worker'
-    'Sure you can to tell us what you did later, %USER_NAME%'
+    'Looks like %userName% is fishing'
+    'As you can see, %userName% is such hard worker'
+    'Sure you can to tell us what you did later, %userName%'
   ]
 
   dailyFinish: [
@@ -52,6 +52,6 @@ module.exports =
   ]
 
   missingUsersCall: [
-    '%USERS_NAMES% weren\'t present, please tell us about your day as soon as possible'
-    'Don\'t forget to update us, %USERS_NAMES%'
+    '%usersNames% weren\'t present, please tell us about your day as soon as possible'
+    'Don\'t forget to update us, %usersNames%'
   ]

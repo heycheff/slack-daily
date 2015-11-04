@@ -5,16 +5,18 @@ USER_BLACKLIST = [
   'dailyfreak'
 ]
 
+DAILY_CHANNEL = 'daily-review'
+
 class ScrumMaster
 
   constructor: (@robot) ->
     @robot.hear /daily time/i, (res) =>
       @res = res
-      res.send res.random Strings.dailyCalledEarly
+      @sendMessage Strings.dailyCalledEarly
       @startDaily()
 
     @robot.hear /./, (res) =>
-      if res.message.user.id == @user.id
+      if @user && res.message.user.id == @user.id
         @answered = true
 
     @robot.hear /next/i, (res) =>
@@ -23,11 +25,17 @@ class ScrumMaster
         clearTimeout(@timeoutId)
         @callNextUser()
 
+  sendMessage: (messages, data) ->
+    message = messages[Math.floor(Math.random() * messages.length)]
+    for key, value of data
+      message = message.replace(new RegExp("%#{key}%", 'g'), value)
+    @robot.send room: DAILY_CHANNEL, message
+
   startDaily:  ->
     @users = (user for _, user of @robot.brain.data.users when !user.slack.deleted && user.name not in USER_BLACKLIST)
     @missedUsers = []
     @user = null
-    @res.send @res.random Strings.dailyStart
+    @sendMessage Strings.dailyStart
     @callNextUser()
 
   callNextUser: ->
@@ -42,28 +50,28 @@ class ScrumMaster
     @user = @users.splice(Math.floor(Math.random() * @users.length), 1)[0]
     @answered = false
 
-    userCallString = @res.random(Strings.userCall).replace('%USER_NAME%', @user.name)
     if previousUser
-      @res.send(@res.random(Strings.userFinished).replace('%USER_NAME%', previousUser.name) + userCallString)
+      @sendMessage Strings.userFinished, userName: previousUser.name
+      @sendMessage Strings.userCall, userName: @user.name
     else
-      @res.send userCallString
+      @sendMessage Strings.userCall, userName: @user.name
 
   userTimedOut: ->
     if !@answered
       @missedUsers.push @user
-      @res.send(@res.random(Strings.userTimedOut).replace('%USER_NAME%', @user.name))
+      @sendMessage Strings.userTimedOut, userName: @user.name
 
     @callNextUser()
 
   finishDaily: ->
     if @missedUsers.length == 0
-      @res.send @res.random Strings.successfullDailyFinish
+      @sendMessage Strings.successfullDailyFinish
     else
-      @res.send @res.random Strings.dailyFinish
+      @sendMessage Strings.dailyFinish
       usersNames = @missedUsers.splice(-1, 1)[0].name
       if @missedUsers.length > 0
         usersNames = @missedUsers.map((user) -> user.name).join(', ') + ' and ' + usersNames
-      @res.send(@res.random(Strings.missingUsersCall).replace('%USERS_NAMES%', usersNames))
+      @sendMessage Strings.missingUsersCall, usersNames: usersNames
 
 module.exports = (robot) ->
   new ScrumMaster robot
