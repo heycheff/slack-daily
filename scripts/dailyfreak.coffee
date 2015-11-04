@@ -1,11 +1,8 @@
 Strings = require '../assets/strings'
 
-USER_BLACKLIST = [
-  'slackbot'
-  'dailyfreak'
-]
-
-DAILY_CHANNEL = 'daily-review'
+channelName = process.env.HUBOT_DAILY_CHANNEL_NAME or 'daily-review'
+usersBlacklist = process.env.HUBOT_DAILY_USERS_BLACKLIST or 'slackbot,dailyfreak'
+usersBlacklist = usersBlacklist.split(',')
 
 class ScrumMaster
 
@@ -29,10 +26,10 @@ class ScrumMaster
     message = messages[Math.floor(Math.random() * messages.length)]
     for key, value of data
       message = message.replace(new RegExp("%#{key}%", 'g'), value)
-    @robot.send room: DAILY_CHANNEL, message
+    @robot.send room: channelName, message
 
   startDaily:  ->
-    @users = (user for _, user of @robot.brain.data.users when !user.slack.deleted && user.name not in USER_BLACKLIST)
+    @users = (user for _, user of @robot.brain.data.users when !user.slack.deleted && user.name not in usersBlacklist)
     @missedUsers = []
     @user = null
     @sendMessage Strings.dailyStart
