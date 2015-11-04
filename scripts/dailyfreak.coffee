@@ -1,6 +1,7 @@
 Strings = require '../assets/strings'
 
 wakeUp = process.env.HUBOT_WAKE_UP or 'daily time'
+wakeUpPath = process.env.HUBOT_WAKE_UP_PATH or '/hubot/daily'
 next = process.env.HUBOT_NEXT or 'next'
 skip = process.env.HUBOT_SKIP or 'skip (.+)'
 channelName = process.env.HUBOT_DAILY_CHANNEL_NAME or 'daily-review'
@@ -31,6 +32,10 @@ class ScrumMaster
         @missedUsers.push @user
         @sendMessage Strings.userSkipped, userName: @user.name
         @callNextUser()
+
+    @robot.router.get wakeUpPath, (req, res) =>
+      @startDaily()
+      res.send ok: true
 
   sendMessage: (messages, data) ->
     message = messages[Math.floor(Math.random() * messages.length)]
