@@ -10,7 +10,6 @@ class ScrumMaster
 
   constructor: (@robot) ->
     @robot.hear new RegExp(wakeUp, 'i'), (res) =>
-      @res = res
       @sendMessage Strings.dailyCalledEarly
       @startDaily()
 
@@ -20,7 +19,6 @@ class ScrumMaster
 
     @robot.hear new RegExp(next, 'i'), (res) =>
       if res.message.user.id == @user.id
-        @res = res
         clearTimeout(@timeoutId)
         @callNextUser()
 
