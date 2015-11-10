@@ -1,3 +1,7 @@
+# Description:
+#   Starts a virtual daily meeting
+#
+
 Strings = require '../assets/strings'
 
 wakeUp = process.env.HUBOT_WAKE_UP or 'daily time'
