@@ -10,7 +10,10 @@ next = process.env.HUBOT_NEXT or 'next'
 skip = process.env.HUBOT_SKIP or 'skip (.+)'
 channelName = process.env.HUBOT_DAILY_CHANNEL_NAME or 'daily-review'
 usersBlacklist = process.env.HUBOT_DAILY_USERS_BLACKLIST or 'slackbot,dailyfreak'
+daysBlacklist = process.env.HUBOT_DAILY_DAYS_BLACKLIST or '0,6'
+
 usersBlacklist = usersBlacklist.split(',')
+daysBlacklist = daysBlacklist.split(',').map (day) -> return parseInt(day)
 
 class ScrumMaster
 
@@ -38,6 +41,7 @@ class ScrumMaster
         @callNextUser()
 
     @robot.router.get wakeUpPath, (req, res) =>
+      return if new Date().getDay() in daysBlacklist
       @startDaily()
       res.send ok: true
 

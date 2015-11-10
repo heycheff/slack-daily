@@ -36,6 +36,7 @@ set some environment variables to customize it:
 - `HUBOT_SKIP` regex of the message to skip member (defaults to `skip (.+)`)
 - `HUBOT_DAILY_CHANNEL_NAME` daily channel (defaults to `daily-review`)
 - `HUBOT_DAILY_USERS_BLACKLIST` comma separated users to ignore (defaults to `slackbot,dailyfreak`)
+- `HUBOT_DAILY_DAYS_BLACKLIST` comma separated week days to skip daily (defaults to `0,6`)
 
 ## Deployment
 
